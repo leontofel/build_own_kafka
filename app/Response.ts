@@ -1,14 +1,17 @@
+const UNSUPPORTED_VERSION = 35
+const MAX_SUPPORTED_API_VERSION = 4
 
 export class Response {
-    
-    private buffer: Buffer = Buffer.alloc(16)
+
+    // message_size (4) + correlation_id (4) + error_code (2)
+    private buffer: Buffer = Buffer.alloc(10)
 
     constructor(correlationId: number, requestApiVersion: number) {
-        this.buffer.writeUInt32BE(4, 0)
-        this.buffer.writeUInt16BE(requestApiVersion > 4 ? 35 : 0, 4)
-        this.buffer.writeUInt32BE(correlationId, 4)
+        const errorCode = requestApiVersion > MAX_SUPPORTED_API_VERSION ? UNSUPPORTED_VERSION : 0
 
-        
+        this.buffer.writeUInt32BE(this.buffer.length - 4, 0)
+        this.buffer.writeUInt32BE(correlationId, 4)
+        this.buffer.writeUInt16BE(errorCode, 8)
     }
 
     getBuffer() {
