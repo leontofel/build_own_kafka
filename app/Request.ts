@@ -1,5 +1,5 @@
 
-export class RequestHeader {
+export class Request {
     private messageSize: number;
     private apiKey: number;
     private apiVersion: number;

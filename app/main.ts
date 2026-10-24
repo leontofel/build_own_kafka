@@ -1,18 +1,18 @@
 import net from "node:net";
 import { Buffer } from "node:buffer"
-import { RequestHeader } from "./RequestHeader"
+import { Request } from "./Request"
+import { Response } from "./Response"
 
 
 const server = net.createServer((connection) => {
   connection.on("data", (data: Buffer) => {
-    const requestHeader = new RequestHeader(data)
+    const request = new Request(data)
 
-    const correlationId = requestHeader.getCorrelationId()
+    const correlationId = request.getCorrelationId()
 
-    const response = Buffer.alloc(8)
-    response.writeUInt32BE(4, 0)
-    response.writeUInt32BE(correlationId, 4)
-    connection.write(response)
+    const response = new Response(correlationId, request.getApiVersion())
+    
+    connection.write(response.getBuffer())
   })
 });
 
