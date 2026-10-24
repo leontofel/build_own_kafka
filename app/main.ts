@@ -14,6 +14,6 @@ const server = net.createServer((connection) => {
     
     connection.write(response.getBuffer())
   })
-});
+})
 
-server.listen(9092, "127.0.0.1");
+server.listen(9092, "127.0.0.1")
